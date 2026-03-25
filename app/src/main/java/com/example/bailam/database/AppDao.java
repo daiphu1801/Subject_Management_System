@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+import androidx.lifecycle.LiveData;
 import java.util.List;
 
 @Dao
@@ -23,14 +24,16 @@ public interface AppDao {
     @Query("SELECT * FROM users WHERE username = :user LIMIT 1")
     User checkUserExists(String user);
 
-    @Query("SELECT * FROM subjects")
-    List<Subject> getAllSubjects();
-    // Trong AppDao.java
-    @Query("SELECT COUNT(*) FROM tasks WHERE subjectId = :sId")
-    int getTotalTasks(int sId);
+    // Lấy môn học kèm phần trăm hoàn thành bằng 1 câu truy vấn Room
+    @Query("SELECT s.*, " +
+           "(SELECT COUNT(*) FROM tasks t WHERE t.subjectId = s.id) AS totalTasks, " +
+           "(SELECT COUNT(*) FROM tasks t WHERE t.subjectId = s.id AND t.isCompleted = 1) AS completedTasks " +
+           "FROM subjects s")
+    LiveData<List<SubjectWithProgress>> getAllSubjectsWithProgress();
 
-    @Query("SELECT COUNT(*) FROM tasks WHERE subjectId = :sId AND isCompleted = 1")
-    int getCompletedTasks(int sId);
+    // Giữ lại methods này nếu cần dùng đồng bộ ở đâu đó, nếu không có thể xoá.
+    @Query("SELECT * FROM subjects")
+    List<Subject> getAllSubjectsRaw();
 
     @Delete
     void deleteSubject(Subject subject);
@@ -41,7 +44,7 @@ public interface AppDao {
 
     // Lấy toàn bộ task của một môn học dựa trên ID môn học
     @Query("SELECT * FROM tasks WHERE subjectId = :sId")
-    List<Task> getTasksBySubject(int sId);
+    LiveData<List<Task>> getTasksBySubject(int sId);
 
     @Update
     void updateTask(Task task);

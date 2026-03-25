@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bailam.database.Task;
 import com.example.bailam.databinding.ItemTaskBinding;
 
+import android.graphics.Paint;
+import android.graphics.Color;
+
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
@@ -41,6 +44,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         holder.binding.tvTaskTitle.setText(task.getTaskTitle());
         holder.binding.cbTask.setChecked(task.isCompleted());
+        
+        if (task.isCompleted()) {
+            holder.binding.tvTaskTitle.setPaintFlags(holder.binding.tvTaskTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.binding.tvTaskTitle.setTextColor(Color.GRAY);
+        } else {
+            holder.binding.tvTaskTitle.setPaintFlags(holder.binding.tvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.binding.tvTaskTitle.setTextColor(Color.parseColor("#333333"));
+        }
 
         // Xử lý khi người dùng tích vào Checkbox (SSP-73)
         holder.binding.cbTask.setOnClickListener(v -> {

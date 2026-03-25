@@ -57,6 +57,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    
+    // Lifecycle components for MVVM
+    val lifecycleVersion = "2.8.4"
+    implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata:$lifecycleVersion")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

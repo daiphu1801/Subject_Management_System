@@ -21,7 +21,6 @@ public abstract class AppDatabase extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "bailam_db")
                     .fallbackToDestructiveMigration() // THÊM DÒNG NÀY
-                    .allowMainThreadQueries()         // Đảm bảo có dòng này để chạy trên main thread
                     .build();
         }
         return instance;

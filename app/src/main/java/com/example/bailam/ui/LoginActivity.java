@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.bailam.database.AppDatabase;
+import androidx.lifecycle.ViewModelProvider;
 import com.example.bailam.database.User;
 import com.example.bailam.databinding.ActivityLoginBinding;
+import com.example.bailam.ui.viewmodel.LoginViewModel;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
+    private LoginViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,19 @@ public class LoginActivity extends AppCompatActivity {
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        
+        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        // Lắng nghe kết quả login
+        viewModel.getLoginResult().observe(this, u -> {
+            if (u != null) {
+                // Lưu phiên đăng nhập
+                pref.edit().putBoolean("isLoggedIn", true).putString("username", u.getUsername()).apply();
+                goToMainActivity();
+            } else {
+                Toast.makeText(this, "Sai tài khoản hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // 2. Nút Đăng nhập
         binding.btnLogin.setOnClickListener(v -> {
@@ -35,15 +50,8 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // Kiểm tra trong Room Database
-            User u = AppDatabase.getInstance(this).appDao().login(user, pass);
-            if (u != null) {
-                // Lưu phiên đăng nhập
-                pref.edit().putBoolean("isLoggedIn", true).putString("username", user).apply();
-                goToMainActivity();
-            } else {
-                Toast.makeText(this, "Sai tài khoản hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
-            }
+            // Gọi ViewModel thay vì gọi thẳng DB
+            viewModel.login(user, pass);
         });
 
         // 3. Chuyển sang màn hình Đăng ký

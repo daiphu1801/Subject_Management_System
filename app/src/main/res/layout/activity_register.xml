@@ -1,39 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:gravity="center">
+    android:background="#FAFAFA">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ĐĂNG KÝ TÀI KHOẢN"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
+    <!-- Header / Back button -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="?attr/homeAsUpIndicator"
+        app:tint="#333333"/>
 
-    <EditText
-        android:id="@+id/edtRegUsername"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tên đăng nhập"
-        android:inputType="text"/>
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_centerInParent="true">
 
-    <EditText
-        android:id="@+id/edtRegPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Mật khẩu"
-        android:inputType="textPassword"
-        android:layout_marginTop="12dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ĐĂNG KÝ TÀI KHOẢN"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/design_default_color_primary"
+            android:layout_marginBottom="40dp"
+            android:layout_gravity="center_horizontal"/>
 
-    <Button
-        android:id="@+id/btnRegisterSubmit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Đăng ký ngay"
-        android:layout_marginTop="24dp"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tên tài khoản mới"
+            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginBottom="16dp">
 
-</LinearLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtRegUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mật khẩu"
+            app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
+            app:passwordToggleEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtRegPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRegisterSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Đăng ký"
+            android:textSize="18sp"
+            android:layout_marginTop="32dp"
+            app:cornerRadius="12dp"/>
+
+    </LinearLayout>
+</RelativeLayout>

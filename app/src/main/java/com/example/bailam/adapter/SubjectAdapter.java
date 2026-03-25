@@ -5,8 +5,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bailam.database.AppDatabase;
 import com.example.bailam.database.Subject;
+import com.example.bailam.database.SubjectWithProgress;
 import com.example.bailam.databinding.ItemSubjectBinding;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder> {
 
-    private List<Subject> subjectList;
+    private List<SubjectWithProgress> subjectList;
     private OnSubjectClickListener listener;
 
     // 1. Interface để xử lý sự kiện
@@ -25,16 +25,16 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
 
     // 2. Constructor
     // Trong SubjectAdapter.java
-    private List<Subject> subjectListFull; // Danh sách gốc để lọc
+    private List<SubjectWithProgress> subjectListFull; // Danh sách gốc để lọc
 
-    public SubjectAdapter(List<Subject> subjectList, OnSubjectClickListener listener) {
+    public SubjectAdapter(List<SubjectWithProgress> subjectList, OnSubjectClickListener listener) {
         this.subjectList = subjectList;
         this.subjectListFull = new ArrayList<>(subjectList); // Sao chép dữ liệu gốc
         this.listener = listener;
     }
 
     // Hàm cập nhật danh sách khi tìm kiếm
-    public void setFilter(List<Subject> newList) {
+    public void setFilter(List<SubjectWithProgress> newList) {
         this.subjectList = newList;
         notifyDataSetChanged();
     }
@@ -49,20 +49,13 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
     // Trong SubjectAdapter.java
     @Override
     public void onBindViewHolder(@NonNull SubjectViewHolder holder, int position) {
-        Subject subject = subjectList.get(position);
+        SubjectWithProgress item = subjectList.get(position);
+        Subject subject = item.subject;
         holder.binding.tvSubjectName.setText(subject.getSubjectName());
         holder.binding.tvTeacherName.setText(subject.getTeacherName());
 
-        // 1. Lấy dữ liệu từ Database (sử dụng DAO thông qua context của view)
-        AppDatabase db = AppDatabase.getInstance(holder.itemView.getContext());
-        int total = db.appDao().getTotalTasks(subject.getId());
-        int completed = db.appDao().getCompletedTasks(subject.getId());
-
-        // 2. Tính phần trăm
-        int percent = 0;
-        if (total > 0) {
-            percent = (completed * 100) / total;
-        }
+        // 2. Tính phần trăm bằng class POJO
+        int percent = item.getPercent();
 
         // 3. Hiển thị lên UI
         holder.binding.pbSubjectProgress.setProgress(percent);
@@ -71,6 +64,13 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
             if (listener != null) {
                 listener.onSubjectClick(subject); // Gọi về MainActivity
             }
+        });
+        
+        holder.itemView.setOnLongClickListener(v -> {
+            if (listener != null) {
+                listener.onSubjectLongClick(subject);
+            }
+            return true;
         });
 
         // Thêm dòng này để có hiệu ứng gợn sóng khi chạm vào (tăng trải nghiệm)
