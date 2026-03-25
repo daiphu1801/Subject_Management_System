@@ -46,6 +46,10 @@ public interface AppDao {
     @Query("SELECT * FROM tasks WHERE subjectId = :sId")
     LiveData<List<Task>> getTasksBySubject(int sId);
 
+    // Dùng cho hệ thống nhắc nhở Notification
+    @Query("SELECT COUNT(*) FROM tasks WHERE isCompleted = 0")
+    int getIncompleteTaskCount();
+
     @Update
     void updateTask(Task task);
 

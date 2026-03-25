@@ -62,6 +62,9 @@ dependencies {
     val lifecycleVersion = "2.8.4"
     implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata:$lifecycleVersion")
+    
+    // WorkManager for Background Tasks
+    implementation("androidx.work:work-runtime:2.9.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

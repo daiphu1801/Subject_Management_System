@@ -14,7 +14,6 @@ import com.example.bailam.database.Task;
 import com.example.bailam.databinding.ActivityTaskBinding;
 import com.example.bailam.databinding.DialogAddTaskBinding;
 import com.example.bailam.ui.viewmodel.TaskViewModel;
-import com.example.bailam.databinding.DialogAddTaskBinding;
 
 import java.util.ArrayList;
 import java.util.List;

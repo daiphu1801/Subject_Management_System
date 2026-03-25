@@ -1,6 +1,7 @@
 package com.example.bailam.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu; // Thêm cái này
 import android.view.MenuItem; // Thêm cái này
@@ -13,6 +14,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.lifecycle.ViewModelProvider;
 import android.widget.PopupMenu;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import com.example.bailam.worker.ReminderWorker;
+import java.util.concurrent.TimeUnit;
 
 import com.example.bailam.R;
 import com.example.bailam.adapter.SubjectAdapter;
@@ -45,6 +57,22 @@ public class MainActivity extends AppCompatActivity {
         }
         
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        // Yêu cầu quyền Thông báo trên Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
+
+        // Hẹn giờ Worker chạy mỗi 24 tiếng để kiểm tra Task
+        PeriodicWorkRequest reminderRequest = new PeriodicWorkRequest.Builder(ReminderWorker.class, 24, TimeUnit.HOURS)
+                .build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "DailyReminder",
+                ExistingPeriodicWorkPolicy.KEEP,
+                reminderRequest
+        );
 
         setupRecyclerView();
         
@@ -118,9 +146,24 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             PopupMenu popup = new PopupMenu(this, binding.toolbar);
-            popup.getMenu().add("Đăng xuất");
+
+            SharedPreferences settings = getSharedPreferences("AppSettings", MODE_PRIVATE);
+            boolean isDark = settings.getBoolean("isDarkMode", false);
+
+            popup.getMenu().add(0, 1, 0, isDark ? "Chế độ Sáng" : "Chế độ Tối");
+            popup.getMenu().add(0, 2, 1, "Đăng xuất");
+
             popup.setOnMenuItemClickListener(menuItem -> {
-                if (menuItem.getTitle().equals("Đăng xuất")) {
+                if (menuItem.getItemId() == 1) {
+                    boolean newMode = !isDark;
+                    settings.edit().putBoolean("isDarkMode", newMode).apply();
+                    if (newMode) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    } else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    }
+                    return true;
+                } else if (menuItem.getItemId() == 2) {
                     logout();
                     return true;
                 }

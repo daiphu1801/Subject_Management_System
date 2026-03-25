@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="?android:colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -15,9 +15,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
+            android:background="?attr/colorSurface"
             app:title="Danh sách môn học"
-            app:titleTextColor="#333333" />
+            app:titleTextColor="?attr/colorOnSurface" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -42,7 +42,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@android:drawable/ic_menu_agenda"
-            app:tint="#B0B0B0"
+            app:tint="?attr/colorOutline"
             android:layout_marginBottom="16dp"/>
         <TextView
             android:layout_width="wrap_content"
@@ -50,14 +50,14 @@
             android:text="Chưa có môn học nào."
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#555555"
+            android:textColor="?attr/colorOnSurface"
             android:gravity="center" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nhấn nút + bên dưới để thêm mới"
             android:textSize="14sp"
-            android:textColor="#888888"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="8dp"
             android:gravity="center" />
     </LinearLayout>

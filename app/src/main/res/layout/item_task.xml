@@ -7,8 +7,8 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="1dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#EEEEEE"
-    app:cardBackgroundColor="@color/white">
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:cardBackgroundColor="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:text="Tên công việc"
             android:textSize="16sp"
-            android:textColor="#333333"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginStart="8dp"/>
 
         <ImageButton
@@ -38,7 +38,7 @@
             android:layout_height="36dp"
             android:src="@android:drawable/ic_menu_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="#F44336"
+            app:tint="?attr/colorError"
             android:scaleType="centerInside"
             android:padding="8dp"/>
     </LinearLayout>
